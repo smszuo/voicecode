@@ -4,7 +4,13 @@ on:
   push:
     branches: [main]
   pull_request:
+  release:
+    types: [published]  # attach the AppImage to every new release
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to attach the AppImage to (e.g. v0.1.0); empty = build only"
+        required: false
 
 permissions:
   contents: read
@@ -33,6 +39,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}  # build the tagged code when attaching to a release
       - uses: astral-sh/setup-uv@v5
       # appimagetool refuses to run without desktop-file-validate.
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends desktop-file-utils
@@ -45,3 +53,20 @@ jobs:
           name: voicecode-appimage
           path: dist/voicecode-*-x86_64.AppImage  # the versioned file, not the stable symlink
           if-no-files-found: error
+
+  release-appimage:
+    needs: build-appimage
+    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.tag != '')
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write  # upload release files; only this job gets write access
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: voicecode-appimage
+          path: dist
+      # The file name carries the pyproject.toml version, so a tag/version mismatch fails here.
+      - run: gh release upload "$TAG" "dist/voicecode-${TAG#v}-x86_64.AppImage" --clobber --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
