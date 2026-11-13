@@ -1,0 +1,14 @@
+#!/bin/sh
+# Entry point of the AppImage. Uses the system Python 3, because GTK and the tray library
+# (python3-gi, gir1.2-ayatanaappindicator3-0.1) come from apt and are not bundled.
+HERE="$(dirname "$(readlink -f "$0")")"
+
+# A double-click does not load ~/.zshrc or ~/.bashrc, where VOICECODE_API_KEY usually lives.
+# Re-run once through the user's interactive shell to pick it up.
+if [ -z "$VOICECODE_API_KEY" ] && [ -z "$VOICECODE_SHELL_ENV" ]; then
+    export VOICECODE_SHELL_ENV=1
+    exec "${SHELL:-/bin/sh}" -ic 'exec "$0" "$@"' "$HERE/AppRun" "$@"
+fi
+
+export PYTHONPATH="$HERE/usr/lib/voicecode/site-packages${PYTHONPATH:+:$PYTHONPATH}"
+exec /usr/bin/python3 -m voicecode "$@"

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      # Tests need no GTK, display, mic, or API key: they use a fake local WebSocket server.
+      - run: uv venv --python ${{ matrix.python }} .venv
+      - run: uv pip install --python .venv/bin/python -e .
+      - run: .venv/bin/python tests/test_voicecode.py
+
+  build-appimage:
+    needs: test
+    # 22.04 ships Python 3.10 as /usr/bin/python3, the same Python the AppImage runs with.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      # `sh` so it works even if git stored the script without the executable bit.
+      - run: sh scripts/build-appimage.sh
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"  # run appimagetool without FUSE on the runner
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voicecode-appimage
+          path: dist/voicecode-*-x86_64.AppImage  # the versioned file, not the stable symlink
+          if-no-files-found: error

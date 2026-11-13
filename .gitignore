@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Build output (scripts/build-appimage.sh)
+build/
+dist/
+*.AppImage
+
+# Secrets: VOICECODE_API_KEY belongs in the environment, never in the repo
+.env
+.env.*

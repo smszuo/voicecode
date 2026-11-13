@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=voicecode
+Comment=Push-to-talk dictation (hold Right Ctrl)
+# The AppImage's AppRun loads VOICECODE_API_KEY / VOICECODE_ENDPOINT from the login shell by itself.
+# Template: @APPIMAGE@ is replaced with the absolute AppImage path at install (see README).
+Exec=@APPIMAGE@
+Terminal=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=5

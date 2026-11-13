@@ -1,0 +1,15 @@
+[project]
+name = "voicecode"
+version = "0.1.0"
+description = "Push-to-talk dictation for Linux X11 with a tray menu"
+readme = "README.md"
+requires-python = ">=3.10"
+# GTK and the tray (python3-gi, gir1.2-ayatanaappindicator3-0.1) come from apt, not PyPI.
+dependencies = ["websockets>=13", "python-xlib>=0.33"]
+
+[project.scripts]
+voicecode = "voicecode.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

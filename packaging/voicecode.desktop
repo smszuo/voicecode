@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=voicecode
+Comment=Push-to-talk dictation (hold Right Ctrl)
+Exec=voicecode
+Icon=voicecode
+Terminal=false
+Categories=Utility;Accessibility;
