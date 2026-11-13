@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Overlay listens for transcript events; settings window calls get/save settings.",
+  "windows": ["overlay", "settings"],
+  "permissions": ["core:default"]
+}
