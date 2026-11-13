@@ -1,6 +1,6 @@
 # voicecode
 
-> **Windows / macOS:** use the cross-platform Tauri app in [`desktop/`](desktop/README.md).
+> **Windows / macOS:** use the cross-platform Tauri app in the separate `voicecode-desktop` repo.
 > This Python client is the original Linux X11 version.
 
 Push-to-talk dictation for Linux X11. Hold the push-to-talk key (default **Right Ctrl**),
@@ -73,7 +73,6 @@ src/voicecode/        app code (app.py); `python -m voicecode` runs it
 tests/                self-test: config handling + fake local server
 packaging/            AppImage files (AppRun, .desktop, icon) and the autostart .desktop
 scripts/              build-appimage.sh
-desktop/              cross-platform Tauri app (Windows, macOS, Linux X11); see desktop/README.md
 .github/workflows/    ci.yml: tests on Python 3.10 + 3.12, then builds the AppImage as an artifact
 pyproject.toml        package metadata, dependencies, `voicecode` command
 ```
