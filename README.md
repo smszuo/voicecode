@@ -52,6 +52,7 @@ gtk-launch voicecode                                                         # s
 ## AppImage (double-click to run)
 
 ```sh
+sudo apt install desktop-file-utils   # appimagetool needs desktop-file-validate
 scripts/build-appimage.sh    # downloads appimagetool 1.9.0 once
 # -> dist/voicecode-<version>-x86_64.AppImage, plus dist/voicecode-x86_64.AppImage pointing to it
 # The version comes from pyproject.toml; bump it there before a release.

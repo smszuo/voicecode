@@ -34,6 +34,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+      # appimagetool refuses to run without desktop-file-validate.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends desktop-file-utils
       # `sh` so it works even if git stored the script without the executable bit.
       - run: sh scripts/build-appimage.sh
         env:
